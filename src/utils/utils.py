@@ -26,35 +26,39 @@ def print_progessbar(N, Max, Name='', Size=10, erase=False):
         else:
             print('')
 
-def show_samples(images, labels, pred, seed=1):
+def show_samples(idx_label_pred, dataset, seed=-1, save_path='', n=(5, 10)):
     """
     Show a sample of correctly and incorrectly classified samples.
-    ----------
-    INPUT
-        |---- images (torch.)
     """
+    idx, labels, pred = idx_label_pred
+    idx, labels, pred = np.array(idx), np.array(labels), np.array(pred)
+    # get correct and incrorect
     correct_mask = pred == labels
-    correct_image, correct_label, correct_pred = images[correct_mask, :, :], labels[correct_mask], pred[correct_mask]
+    correct_idx, correct_label, correct_pred = idx[correct_mask], labels[correct_mask], pred[correct_mask]
     incorrect_mask = pred != labels
-    incorrect_image, incorrect_label, incorrect_pred = images[incorrect_mask, :, :], labels[incorrect_mask], pred[incorrect_mask]
+    incorrect_idx, incorrect_label, incorrect_pred = idx[incorrect_mask], labels[incorrect_mask], pred[incorrect_mask]
 
-    n1, n2 = 5, 10
-    fig, axs = plt.subplots(n1, n2, figsize=(18, 9), gridspec_kw={'hspace':0.2, 'wspace':0.01})
+    n1, n2 = n
+    fig, axs = plt.subplots(n1, n2, figsize=(n2*2, n1*2), gridspec_kw={'hspace':0.2, 'wspace':0.01})
 
     # get correctly classified sample
-    prng = np.random.RandomState(seed=1)
-    ind = prng.randint(low=0, high=correct_image.shape[0], size=(n1, n2//2))
+    prng = np.random.RandomState(seed=seed) if seed != -1 else np.random
+    ind = prng.randint(low=0, high=correct_idx.shape[0], size=(n1, n2//2))
+
     for i in range(n1):
         for j in range(n2//2):
-            axs[i,j].imshow(correct_image[ind[i,j]], cmap='gray')
+            axs[i,j].imshow(dataset[correct_idx[ind[i,j]]][0][0,:,:].numpy(), cmap='gray')
             axs[i,j].set_axis_off()
             title = axs[i,j].set_title(f'True {correct_label[ind[i,j]]} ; Pred {correct_pred[ind[i,j]]}', color='limegreen', fontweight='bold', fontsize=10)
 
     # get incorrectly classified sample
-    prng = np.random.RandomState(seed=seed)
-    ind = prng.randint(low=0, high=incorrect_image.shape[0], size=(n1, n2//2))
+    prng = np.random.RandomState(seed=seed) if seed != -1 else np.random
+    ind = prng.randint(low=0, high=incorrect_idx.shape[0], size=(n1, n2//2))
+
     for i in range(n1):
         for j in range(n2//2):
-            axs[i,j + n2//2].imshow(incorrect_image[ind[i,j]], cmap='gray')
+            axs[i,j + n2//2].imshow(dataset[incorrect_idx[ind[i,j]]][0][0,:,:].numpy(), cmap='gray')
             axs[i,j + n2//2].set_axis_off()
             title = axs[i,j + n2//2].set_title(f'True {incorrect_label[ind[i,j]]} ; Pred {incorrect_pred[ind[i,j]]}', color='crimson', fontweight='bold', fontsize=10)
+
+    fig.savefig(save_path, dpi=200, bbox_inches='tight')

@@ -71,7 +71,7 @@ class LeNet5_trainer:
             epoch_start_time = time.time()
             epoch_loss = 0.0
             # minibatch iteration
-            for b, (train_input, train_label) in enumerate(train_loader):
+            for b, (train_input, train_label, _) in enumerate(train_loader):
                 train_input = train_input.float().to(self.device)
                 train_input.require_grad = True
                 train_label = train_label.to(self.device)
@@ -121,20 +121,25 @@ class LeNet5_trainer:
 
         N = loader.__len__()
         with torch.no_grad():
-            pred, label = [], []
-            for b, (input_data, input_label) in enumerate(loader):
+            pred, label, index = [], [], []
+            idx_label_pred = []
+            for b, (input_data, input_label, idx) in enumerate(loader):
                 input_data = input_data.float().to(self.device)
                 input_label = input_label.to(self.device)
+                idx = idx.to(self.device)
                 # classify sample
                 pred += self.net(input_data).argmax(dim=1).tolist()
                 label += input_label.tolist()
+                index += idx.tolist()
+                #idx_label_pred += list(zip(idx.tolist(), input_label.tolist(), pred.tolist()))
 
                 print_progessbar(b, N, Name='Evaluation Batch', Size=40, erase=True)
 
+            #_, label, pred = zip(*idx_label_pred)
             acc = sklearn.metrics.accuracy_score(label, pred)
 
             if last:
-                self.test_acc, self.test_pred = acc, pred
+                self.test_acc, self.test_pred = acc, (index, label, pred)#list(zip(index, pred, label))
                 logger.info(f'>>> Test accuracy {self.test_acc:.3%} \n')
             else:
                 return acc, pred
@@ -154,7 +159,7 @@ class LeNet5_trainer:
 
     def save_results(self, export_path):
         """
-
+        Save the results on a JSON.
         """
         results = {'train_time': self.train_time,
                    'loss': self.epoch_loss_list,

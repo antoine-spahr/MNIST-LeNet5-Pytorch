@@ -1,7 +1,8 @@
 import torch
 import torch.cuda
 import numpy as np
-#import torchvision
+import matplotlib
+matplotlib.use('Agg') # do not show plot
 import random
 from datetime import datetime
 import ast
@@ -11,8 +12,9 @@ import click
 
 from src.network.LeNet5 import LeNet5
 from src.optim.LeNet5_trainer import LeNet5_trainer
-from src.dataset.load_dataset import load_dataset
+from src.dataset.MNISTDataset import MNISTDataset
 from src.utils.Config import Config
+from src.utils.utils import show_samples
 
 ################################################################################
 #                                   Settings                                   #
@@ -101,11 +103,11 @@ def main(**params):
             logger.info(f'Set seed {i+1:02}/{len(seeds):02} to {seed}')
 
         # get dataset
-        train_dataset = load_dataset(cfg.settings['dataset_name'],
+        train_dataset = MNISTDataset(cfg.settings['dataset_name'],
                                      cfg.settings['data_path'], train=True,
                                      data_augmentation = True)
 
-        test_dataset = load_dataset(cfg.settings['dataset_name'],
+        test_dataset = MNISTDataset(cfg.settings['dataset_name'],
                                     cfg.settings['data_path'], train=False,
                                     data_augmentation = False)
         # get model
@@ -136,7 +138,8 @@ def main(**params):
         test_acc_list.append(LeNet.test_acc)
 
         # show results
-
+        show_samples(LeNet.test_pred, test_dataset, n=(5,10),
+                     save_path=OUTPUT_PATH+f'results/classification_sample_{i+1}.pdf')
 
     train_acc, test_acc = np.array(train_acc_list), np.array(test_acc_list)
     logger.info('\n'+'-'*60)
