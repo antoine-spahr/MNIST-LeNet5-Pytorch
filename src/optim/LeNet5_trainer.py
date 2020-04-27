@@ -63,7 +63,7 @@ class LeNet5_trainer:
 
         train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=self.batch_size,
                                             num_workers=self.num_workers)
-        n_batch = train_loader.__len__()
+        n_batch = len(train_loader)
 
         logger.info(f'>>> Start Training the LeNet5 with seed {self.seed}.')
         start_time = time.time()
@@ -119,10 +119,9 @@ class LeNet5_trainer:
         loader = torch.utils.data.DataLoader(dataset, batch_size=self.batch_size,
                                             num_workers=self.num_workers)
 
-        N = loader.__len__()
+        N = len(loader)
         with torch.no_grad():
             pred, label, index = [], [], []
-            idx_label_pred = []
             for b, (input_data, input_label, idx) in enumerate(loader):
                 input_data = input_data.float().to(self.device)
                 input_label = input_label.to(self.device)
@@ -131,15 +130,14 @@ class LeNet5_trainer:
                 pred += self.net(input_data).argmax(dim=1).tolist()
                 label += input_label.tolist()
                 index += idx.tolist()
-                #idx_label_pred += list(zip(idx.tolist(), input_label.tolist(), pred.tolist()))
 
                 print_progessbar(b, N, Name='Evaluation Batch', Size=40, erase=True)
 
-            #_, label, pred = zip(*idx_label_pred)
+            # compute accuracy
             acc = sklearn.metrics.accuracy_score(label, pred)
 
             if last:
-                self.test_acc, self.test_pred = acc, (index, label, pred)#list(zip(index, pred, label))
+                self.test_acc, self.test_pred = acc, (index, label, pred)
                 logger.info(f'>>> Test accuracy {self.test_acc:.3%} \n')
             else:
                 return acc, pred
