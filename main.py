@@ -21,7 +21,7 @@ from src.utils.utils import show_samples
 ################################################################################
 
 @click.command()
-@click.argument('dataset_name', type=click.Choice(['MNIST', 'FashionMNIST', 'KMNIST']))
+@click.argument('dataset_name', type=click.Choice(['MNIST', 'FashionMNIST', 'KMNIST', 'QMNIST']))
 @click.argument('net_name', type=click.Choice(['LeNet5']))
 @click.option('--exp_folder', type=str, default='Outputs/',
               help='Where to export outputs. Default: Outputs/')
@@ -110,6 +110,18 @@ def main(**params):
         test_dataset = MNISTDataset(cfg.settings['dataset_name'],
                                     cfg.settings['data_path'], train=False,
                                     data_augmentation = False)
+
+        # define the LookUpTable for KMNIST and FashionMNIST
+        LUT = None
+        if cfg.settings['dataset_name'] == 'FashionMNIST':
+            LUT = {0:'T-Shirt/Top', 1:'Trouser', 2:'Pullover', 3:'Dress', 4:'Coat',
+                   5:'Sandal', 6:'Shirt', 7:'Sneaker', 8:'Bag', 9:'Ankle boot'}
+        elif cfg.settings['dataset_name'] == 'KMNIST':
+            LUT = {0:chr(12362)+' (a)', 1:chr(12365)+' (ki)', 2:chr(12377)+' (su)',
+                   3:chr(12388)+' (tu)', 4:chr(12394)+' (na)', 5:chr(12399)+' (ha)',
+                   6:chr(12414)+' (ma)', 7:chr(12420)+' (ya)', 8:chr(12428)+' (re)',
+                   9:chr(12434)+' (wo)'}
+
         # get model
         net = LeNet5()
         LeNet = LeNet5_trainer(net, n_epoch=cfg.settings['n_epochs'], batch_size=cfg.settings['batch_size'],
@@ -139,7 +151,7 @@ def main(**params):
 
         # show results
         show_samples(LeNet.test_pred, test_dataset, n=(5,10),
-                     save_path=OUTPUT_PATH+f'results/classification_sample_{i+1}.pdf')
+                     save_path=OUTPUT_PATH+f'results/classification_sample_{i+1}.pdf', lut=LUT)
 
     train_acc, test_acc = np.array(train_acc_list), np.array(test_acc_list)
     logger.info('\n'+'-'*60)

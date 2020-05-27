@@ -33,13 +33,13 @@ class MNISTDataset(torch.utils.data.Dataset):
                                               download=True, transform=transform)
         elif dataset_name == 'FashionMNIST':
             self.dataset =  torchvision.datasets.FashionMNIST(data_path, train=train,
-                                              download=True, transform=transoform)
+                                              download=True, transform=transform)
         elif dataset_name == 'KMNIST':
             self.dataset = torchvision.datasets.KMNIST(data_path, train=train,
-                                              download=True, transform=transoform)
+                                              download=True, transform=transform)
         elif dataset_name == 'QMNIST':
             self.dataset = torchvision.datasets.QMNIST(data_path, train=train,
-                                              download=True, transform=transoform)
+                                              download=True, transform=transform)
         else:
             raise ValueError('Non-supported dataset name')
 
