@@ -1,5 +1,6 @@
 import matplotlib
 import matplotlib.pyplot as plt
+matplotlib.rc('font', family='Hiragino Sans GB')
 import numpy as np
 
 def print_progessbar(N, Max, Name='', Size=10, erase=False):
