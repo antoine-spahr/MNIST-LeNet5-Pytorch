@@ -10,10 +10,10 @@ The famous LeNet5 architecture in implemented with `Pytorch`. It's composed of t
 
 ## Overall Performances
 
-|     |      MNIST      |  FashionMNIST   | KMNIST | QMNIST |
-|-----|-----------------|-----------------|--------|--------|
-|Train| 99.362 ± 0.085% | 89.701 ± 0.441% |        |        |
-|Test | 99.445 ± 0.077% | 89.495 ± 0.534% |        |        |
+|     |      MNIST      |  FashionMNIST   |      KMNIST     | QMNIST |
+|-----|-----------------|-----------------|-----------------|--------|
+|Train| 99.362 ± 0.085% | 89.701 ± 0.441% | 98.518 ± 1.219% |        |
+|Test | 99.445 ± 0.077% | 89.495 ± 0.534% | 96.255 ± 1.134% |        |
 
 <sup>\*Accuracy presented as _mean ± 1.96 std_</sup>
 ___
@@ -57,6 +57,9 @@ The model is trained 10 times with the following parameters:
 |---------|---------------|------------|----------|-----------|
 | 150     | 0.002         |    128     |   0.98   |    ADAM   |
 
+### Sample Prediction
+
+![KMNIST Sample](Figures/KMNIST_classification_sample.png)
 ___
 ## QMNIST
 Same dataset of Handwritten digits as MNIST but with more test examples. The train set contains 60'000 examples and the test set contains **60'000** examples.

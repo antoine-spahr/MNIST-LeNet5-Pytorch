@@ -135,3 +135,4 @@ dmypy.json
 .DS_Store
 data/*
 Outputs/**/*.pt
+kmnist_fig_corrector.py
