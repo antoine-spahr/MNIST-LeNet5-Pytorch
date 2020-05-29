@@ -10,10 +10,10 @@ The famous LeNet5 architecture in implemented with `Pytorch`. It's composed of t
 
 ## Overall Performances
 
-|     |      MNIST      |  FashionMNIST   |      KMNIST     | QMNIST |
-|-----|-----------------|-----------------|-----------------|--------|
-|Train| 99.362 ± 0.085% | 89.701 ± 0.441% | 98.518 ± 1.219% |        |
-|Test | 99.445 ± 0.077% | 89.495 ± 0.534% | 96.255 ± 1.134% |        |
+|     |      MNIST      |  FashionMNIST   |      KMNIST     |     QMNIST     |
+|-----|-----------------|-----------------|-----------------|----------------|
+|Train| 99.362 ± 0.085% | 89.701 ± 0.441% | 98.518 ± 1.219% | 99.356 ± 0.057 |
+|Test | 99.445 ± 0.077% | 89.495 ± 0.534% | 96.255 ± 1.134% | 99.328 ± 0.055 |
 
 <sup>\*Accuracy presented as _mean ± 1.96 std_</sup>
 ___
@@ -70,3 +70,7 @@ The model is trained 10 times with the following parameters:
 | N epoch | Learning rate | Batch Size | LR decay | Optimizer |
 |---------|---------------|------------|----------|-----------|
 | 150     | 0.002         |    128     |   0.98   |    ADAM   |
+
+### Sample Prediction
+
+![QMNIST Sample](Figures/QMNIST_classification_sample.png)
